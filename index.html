@@ -12,58 +12,115 @@ body {
     background: #f2f2f2;
 }
 
+/* HEADER */
 .header {
     background: #d32f2f;
     color: white;
-    padding: 15px;
+    padding: 18px;
     text-align: center;
     font-size: 20px;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
+/* CONTAINER */
 .container {
     padding: 10px;
+    max-width: 600px;
+    margin: auto;
 }
 
+/* STATS */
 .stats {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+    gap: 10px;
     margin: 10px 0;
-    font-weight: bold;
 }
 
-select, input {
-    width: 100%;
+.stats div {
+    flex: 1;
+    background: white;
     padding: 12px;
-    margin-bottom: 10px;
+    border-radius: 10px;
+    text-align: center;
     font-size: 16px;
 }
 
+/* INPUT */
+select, input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+/* STUDENT CARD */
 .student {
     background: white;
-    margin-bottom: 8px;
-    padding: 12px;
-    border-radius: 8px;
+    margin-bottom: 10px;
+    padding: 14px;
+    border-radius: 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 16px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
+/* MISSING */
 .student.missing {
     background: #ffe5e5;
+    border-left: 6px solid red;
 }
 
+/* CHECKBOX BESAR */
+.student input[type="checkbox"] {
+    width: 28px;
+    height: 28px;
+}
+
+/* BUTTON */
 .btn {
-    padding: 12px;
+    padding: 14px;
     width: 100%;
     border: none;
     font-size: 16px;
-    border-radius: 8px;
-    margin-top: 5px;
+    border-radius: 10px;
+    margin-top: 6px;
 }
 
 .export { background: #4caf50; color: white; }
 .reset { background: #ff9800; color: white; }
+
+/* MOBILE POWER MODE */
+@media (max-width: 480px) {
+
+    .header {
+        font-size: 18px;
+        padding: 15px;
+    }
+
+    .student {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .student input {
+        align-self: flex-end;
+    }
+
+    .stats div {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+}
 </style>
 </head>
 
