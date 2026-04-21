@@ -805,10 +805,13 @@ function renderList() {
 
     if (hilang > 0) {
         header.style.background = "#d32f2f"; // merah
+        header.innerText = "🚨 ADA MURID HILANG!";
     } else if (tidakHadir > 0) {
         header.style.background = "orange"; // oren
+        header.innerText = "⚠️ SEMUA SELAMAT (ADA MURID TIDAK HADIR)";
     } else {
         header.style.background = "#2e7d32"; // hijau
+        header.innerText = "✅ SEMUA MURID SELAMAT";
     }
 
     document.getElementById("hadir").innerText = hadir;
