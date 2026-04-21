@@ -138,7 +138,10 @@ select, input {
 
 <body>
 
-<div class="header">🚨 Evakuasi Murid (Latihan Pencegahan Kebakaran Siri 1/2026)</div>
+<div class="header">
+    <div id="title">🚨 Evakuasi Murid (Latihan Pencegahan Kebakaran Siri 1/2026)</div>
+    <div id="statusText">🚨 ADA MURID HILANG!</div>
+</div>
 
 <div class="container">
 
@@ -802,16 +805,17 @@ function renderList() {
     });
 
     const header = document.querySelector(".header");
+    const statusText = document.getElementById("statusText");
 
     if (hilang > 0) {
-        header.style.background = "#d32f2f"; // merah
-        header.innerText = "🚨 ADA MURID HILANG!";
+        header.style.background = "#d32f2f";
+        statusText.innerText = "🚨 ADA MURID HILANG!";
     } else if (tidakHadir > 0) {
-        header.style.background = "orange"; // oren
-        header.innerText = "⚠️ SEMUA SELAMAT (ADA MURID TIDAK HADIR)";
+        header.style.background = "orange";
+        statusText.innerText = "⚠️ SEMUA SELAMAT (ADA MURID TIDAK HADIR)";
     } else {
-        header.style.background = "#2e7d32"; // hijau
-        header.innerText = "✅ SEMUA MURID SELAMAT";
+        header.style.background = "#2e7d32";
+        statusText.innerText = "✅ SEMUA MURID SELAMAT";
     }
 
     document.getElementById("hadir").innerText = hadir;
