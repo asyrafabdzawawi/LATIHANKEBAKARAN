@@ -801,15 +801,32 @@ function renderList() {
         list.appendChild(div);
     });
 
-    if (totalView > 0 && hadir === totalView) {
-        document.querySelector(".header").style.background = "#2e7d32";
+    const header = document.querySelector(".header");
+
+    if (hilang > 0) {
+        header.style.background = "#d32f2f"; // merah
+    } else if (tidakHadir > 0) {
+        header.style.background = "orange"; // oren
     } else {
-        document.querySelector(".header").style.background = "#d32f2f";
+        header.style.background = "#2e7d32"; // hijau
     }
 
     document.getElementById("hadir").innerText = hadir;
     document.getElementById("absent").innerText = tidakHadir;
     document.getElementById("missing").innerText = hilang;
+
+    const header = document.querySelector(".header");
+
+    if (hilang > 0) {
+        header.style.background = "#d32f2f";
+        header.innerText = "🚨 ADA MURID HILANG!";
+    } else if (tidakHadir > 0) {
+        header.style.background = "orange";
+        header.innerText = "⚠️ SEMUA SELAMAT (ADA TIDAK HADIR)";
+    } else {
+        header.style.background = "#2e7d32";
+        header.innerText = "✅ SEMUA MURID SELAMAT";
+    }
 }
 
 // ================= EXPORT =================
