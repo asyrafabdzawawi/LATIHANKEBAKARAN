@@ -702,11 +702,26 @@ function renderList() {
             db.ref("status/" + id).set(e.target.checked);
         };
 
+        div.onclick = (e) => {
+            if (e.target.tagName !== "INPUT") {
+                const newValue = !checked;
+                db.ref("status/" + id).set(newValue);
+            }
+        };
+
         if (checked) hadir++;
         totalView++;
 
+        
+
         list.appendChild(div);
     });
+
+    if (totalView > 0 && hadir === totalView) {
+        document.querySelector(".header").style.background = "#2e7d32";
+    } else {
+        document.querySelector(".header").style.background = "#d32f2f";
+    }
 
     document.getElementById("hadir").innerText = hadir;
     document.getElementById("missing").innerText = totalView - hadir;
