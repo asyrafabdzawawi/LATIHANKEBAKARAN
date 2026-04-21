@@ -134,13 +134,20 @@ select, input {
 }
 
 #title {
-    font-size: 16px;
+    font-size: 24px;
+}
+
+.header {
+    background: #0d47a1; /* warna tetap */
 }
 
 #statusText {
-    font-size: 18px;
     margin-top: 5px;
+    padding: 6px;
+    border-radius: 6px;
 }
+
+
     
 </style>
 </head>
@@ -817,13 +824,13 @@ function renderList() {
     const statusText = document.getElementById("statusText");
 
     if (hilang > 0) {
-        header.style.background = "#d32f2f";
+        statusText.style.background = "#d32f2f";
         statusText.innerText = "🚨 ADA MURID HILANG!";
     } else if (tidakHadir > 0) {
-        header.style.background = "orange";
+        statusText.style.background = "orange";
         statusText.innerText = "⚠️ SEMUA SELAMAT (ADA MURID TIDAK HADIR)";
     } else {
-        header.style.background = "#2e7d32";
+        statusText.style.background = "#2e7d32";
         statusText.innerText = "✅ SEMUA MURID SELAMAT";
     }
 
