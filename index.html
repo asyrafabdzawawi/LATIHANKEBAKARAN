@@ -815,18 +815,7 @@ function renderList() {
     document.getElementById("absent").innerText = tidakHadir;
     document.getElementById("missing").innerText = hilang;
 
-    const header = document.querySelector(".header");
-
-    if (hilang > 0) {
-        header.style.background = "#d32f2f";
-        header.innerText = "🚨 ADA MURID HILANG!";
-    } else if (tidakHadir > 0) {
-        header.style.background = "orange";
-        header.innerText = "⚠️ SEMUA SELAMAT (ADA TIDAK HADIR)";
-    } else {
-        header.style.background = "#2e7d32";
-        header.innerText = "✅ SEMUA MURID SELAMAT";
-    }
+    
 }
 
 // ================= EXPORT =================
