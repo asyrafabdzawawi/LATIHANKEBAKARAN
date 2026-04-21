@@ -91,6 +91,26 @@ select, input {
 
 </div>
 
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyD6Av0qwBU77SCNDBnt3hE5XZaOO2h_oQ8",
+  authDomain: "latihankebakaran.firebaseapp.com",
+  databaseURL: "https://latihankebakaran-default-rtdb.firebaseio.com",
+  projectId: "latihankebakaran",
+  storageBucket: "latihankebakaran.appspot.com",
+  messagingSenderId: "616622805234",
+  appId: "1:616622805234:web:667cff0da39a13a7a8c06b",
+  measurementId: "G-HM1QBYR5VL"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+</script>
+
 <script>
 
 // ================= DATA =================
@@ -576,7 +596,12 @@ const students = [
 ];
 
 // ================= INIT =================
-let status = JSON.parse(localStorage.getItem("status")) || {};
+let status = {};
+
+db.ref("status").on("value", snapshot => {
+    status = snapshot.val() || {};
+    renderList();
+});
 
 const kelasSet = [...new Set(students.map(s => s.kelas))];
 const select = document.getElementById("kelasFilter");
@@ -597,6 +622,7 @@ function renderList() {
     const kelas = document.getElementById("kelasFilter").value;
 
     let hadir = 0;
+    let totalView = 0;
 
     students.forEach((s, i) => {
         if ((kelas !== "all" && s.kelas !== kelas) ||
@@ -605,7 +631,8 @@ function renderList() {
         const div = document.createElement("div");
         div.className = "student";
 
-        const checked = status[i] || false;
+        const id = (s.kelas + "_" + s.nama).replace(/\s/g, "_");
+        const checked = status[id] || false;
         if (!checked) div.classList.add("missing");
 
         div.innerHTML = `
@@ -614,24 +641,29 @@ function renderList() {
         `;
 
         div.querySelector("input").onchange = (e) => {
-            status[i] = e.target.checked;
-            localStorage.setItem("status", JSON.stringify(status));
-            renderList();
+            const id = (s.kelas + "_" + s.nama).replace(/\s/g, "_");
+            db.ref("status/" + id).set(e.target.checked);
         };
 
         if (checked) hadir++;
+        totalView++;
 
         list.appendChild(div);
     });
 
     document.getElementById("hadir").innerText = hadir;
-    document.getElementById("missing").innerText = students.length - hadir;
+    document.getElementById("missing").innerText = totalView - hadir;
 }
 
 // ================= EXPORT =================
+
+
 function exportMissing() {
     let missing = students
-        .map((s, i) => (!status[i] ? s.nama + " ("+s.kelas+")" : null))
+        .map((s) => {
+            const id = (s.kelas + "_" + s.nama).replace(/\s/g, "_");
+            return !status[id] ? s.nama + " (" + s.kelas + ")" : null;
+        })
         .filter(x => x);
 
     let text = "MURID BELUM DIJUMPA:\n\n" + missing.join("\n");
@@ -644,16 +676,12 @@ function exportMissing() {
     a.download = "murid_hilang.txt";
     a.click();
 }
-
 // ================= RESET =================
 function resetAll() {
     if(confirm("Reset semua kehadiran?")) {
-        status = {};
-        localStorage.removeItem("status");
-        renderList();
+        db.ref("status").remove();
     }
 }
-
 renderList();
 
 </script>
