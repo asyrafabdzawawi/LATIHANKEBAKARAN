@@ -127,6 +127,12 @@ select, input {
     background: #e8f5e9;
     border-left: 6px solid #2e7d32;
 }
+
+.student.absent {
+    background: #fff3e0;
+    border-left: 6px solid orange;
+}
+    
 </style>
 </head>
 
@@ -145,6 +151,7 @@ select, input {
 <div class="stats">
 <div>✅ Ada: <span id="hadir">0</span></div>
 <div>❌ Hilang: <span id="missing">0</span></div>
+<div>🟠 Tidak Hadir: <span id="absent">0</span></div>
 </div>
 
 <div id="list"></div>
@@ -736,6 +743,8 @@ function renderList() {
 
     let hadir = 0;
     let totalView = 0;
+    let tidakHadir = 0;
+    let hilang = 0;
 
     students.forEach((s, i) => {
         if ((kelas !== "all" && s.kelas !== kelas) ||
@@ -745,34 +754,49 @@ function renderList() {
         div.className = "student";
 
         const id = (s.kelas + "_" + s.nama).replace(/\s/g, "_");
-        const checked = status[id] || false;
-        if (checked) {
-            div.classList.add("present");
+        const state = status[id] ?? 0;
+
+        if (state === 1) {
+            div.classList.add("present"); // hijau
+        } else if (state === 2) {
+            div.classList.add("absent"); // oren
         } else {
-            div.classList.add("missing");
+            div.classList.add("missing"); // merah
         }
 
         div.innerHTML = `
             <span>${s.nama} <br><small>${s.kelas}</small></span>
-            <input type="checkbox" ${checked ? "checked" : ""}>
+            <input type="checkbox" ${state === 1 ? "checked" : ""}>
         `;
 
         div.querySelector("input").onchange = (e) => {
             const id = (s.kelas + "_" + s.nama).replace(/\s/g, "_");
-            db.ref("status/" + id).set(e.target.checked);
+            const newState = e.target.checked ? 1 : 0;
+            db.ref("status/" + id).set(newState);
         };
 
         div.onclick = (e) => {
             if (e.target.tagName !== "INPUT") {
-                const newValue = !checked;
-                db.ref("status/" + id).set(newValue);
+
+                const current = status[id] ?? 0;
+                let next;
+
+                if (current === 0) next = 1;       // hilang → hadir
+                else if (current === 1) next = 2;  // hadir → tidak hadir (oren)
+                else next = 0;                     // tidak hadir → reset hilang
+
+                db.ref("status/" + id).set(next);
             }
         };
 
-        if (checked) hadir++;
+        if (state === 1) hadir++;
         totalView++;
 
         
+
+        if (state === 2) tidakHadir++;
+
+        if (state === 0) hilang++;
 
         list.appendChild(div);
     });
@@ -784,7 +808,8 @@ function renderList() {
     }
 
     document.getElementById("hadir").innerText = hadir;
-    document.getElementById("missing").innerText = totalView - hadir;
+    document.getElementById("absent").innerText = tidakHadir;
+    document.getElementById("missing").innerText = hilang;
 }
 
 // ================= EXPORT =================
@@ -794,7 +819,9 @@ function exportMissing() {
     let missing = students
         .map((s) => {
             const id = (s.kelas + "_" + s.nama).replace(/\s/g, "_");
-            return !status[id] ? s.nama + " (" + s.kelas + ")" : null;
+            return (status[id] ?? 0) === 0 
+                ? s.nama + " (" + s.kelas + ")" 
+                : null;
         })
         .filter(x => x);
 
