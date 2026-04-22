@@ -772,7 +772,9 @@ function renderList() {
         const div = document.createElement("div");
         div.className = "student";
 
-        const id = (s.kelas + "_" + s.nama).replace(/\s/g, "_");
+        const id = (s.kelas + "_" + s.nama)
+            .replace(/\s/g, "_")
+            .replace(/[.#$\[\]'"]/g, "");
         const state = status[id] ?? 0;
 
         if (state === 1) {
